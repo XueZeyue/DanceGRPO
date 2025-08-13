@@ -38,7 +38,16 @@ For video generation,
 ```bash
 ./env_setup.sh fastvideo
 ```
+If you are using NPU for training, you need to modify the following code:
+```python
+# your_path_to_python/site-packages/diffusers/models/embeddings.py line 1250
+is mps = ids.device.type == "mps"
+is_npu = ids.device.type == "npu" # modified
+freqs_dtype = torch.float3 if is_mps or is _npu else torch.float64 # modified
+```
+
 ### Training
+
 ```bash
 # for Stable Diffusion, with 8 H800 GPUs
 bash scripts/finetune/finetune_sd_grpo.sh   

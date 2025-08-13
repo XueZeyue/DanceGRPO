@@ -2,9 +2,8 @@ export WANDB_DISABLED=true
 export WANDB_BASE_URL="https://api.wandb.ai"
 export WANDB_MODE=online
 
-
-mkdir images
-
+mkdir -p images
+export HCCL_BUFFSIZE=800
 
 sudo apt-get update
 yes | sudo apt-get install python3-tk
