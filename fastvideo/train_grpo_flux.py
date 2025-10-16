@@ -60,6 +60,12 @@ from PIL import Image
 from diffusers import FluxTransformer2DModel, AutoencoderKL
 from contextlib import contextmanager
 from safetensors.torch import save_file
+from fastvideo.utils.device_utils import is_npu_available
+
+if is_npu_available():
+    import torch_npu
+    from torch_npu.contrib import transfer_to_npu
+    torch.npu.config.allow_internal_format = False
 
 class FSDP_EMA:
     def __init__(self, model, decay, rank):
@@ -351,7 +357,17 @@ def sample_reference_model(
         input_latents_new = pack_latents(input_latents, len(batch_idx), IN_CHANNELS, latent_h, latent_w)
         image_ids = prepare_latent_image_ids(len(batch_idx), latent_h // 2, latent_w // 2, device, torch.bfloat16)
         grpo_sample=True
-        progress_bar = tqdm(range(0, sample_steps), desc="Sampling Progress")
+
+        # Set progress bar for Sampling Process
+        rank = torch.distributed.get_rank()
+        progress_bar = tqdm(
+            range(0, sample_steps),
+            desc=f"GPU {rank} Sampling",
+            position=rank,
+            leave=True,
+            disable=(rank != 0)
+        )
+
         with torch.no_grad():
             z, latents, batch_latents, batch_log_probs = run_sample_step(
                 args,

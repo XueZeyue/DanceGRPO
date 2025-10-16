@@ -9,7 +9,7 @@ import torch
 from peft.utils.other import fsdp_auto_wrap_policy
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     CheckpointImpl, apply_activation_checkpointing, checkpoint_wrapper)
-from torch.distributed.fsdp import MixedPrecision, ShardingStrategy
+from torch.distributed.fsdp import MixedPrecision, ShardingStrategy, BackwardPrefetch
 from torch.distributed.fsdp.wrap import transformer_auto_wrap_policy
 
 from fastvideo.models.mochi_hf.modeling_mochi import MochiTransformerBlock
@@ -105,6 +105,8 @@ def get_dit_fsdp_kwargs(
         "device_id": device_id,
         "limit_all_gathers": True,
         "cpu_offload": cpu_offload,
+        "forward_prefetch": True,
+        "backward_prefetch": BackwardPrefetch.BACKWARD_PRE
     }
 
     # Add LoRA-specific settings when LoRA is enabled
