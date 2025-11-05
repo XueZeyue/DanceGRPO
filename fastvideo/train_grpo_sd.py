@@ -474,9 +474,9 @@ def main(_):
                                 hps_score = hps_score[:,0]
                             rewards.append(hps_score)
 
-            latents = torch.stack(latents, dim=1).detach()     # (4, num_steps+1, ...)
-            log_probs = torch.stack(log_probs, dim=1).detach()   # (4, num_steps, ...)
-            rewards = torch.cat(rewards, dim=0)  
+            latents = torch.stack(latents, dim=1).detach().clone()     # (4, num_steps+1, ...)
+            log_probs = torch.stack(log_probs, dim=1).detach().clone()   # (4, num_steps, ...)
+            rewards = torch.cat(rewards, dim=0).detach()
             
 
             all_latents.append(latents)
@@ -543,10 +543,10 @@ def main(_):
             group_rewards = samples["rewards"][start_idx:end_idx]
             group_mean = group_rewards.mean()
             group_std = group_rewards.std() + 1e-8
-            advantages[start_idx:end_idx] = (group_rewards - group_mean) / group_std
-        samples["advantages"] = advantages
+            advantages[start_idx:end_idx] = ((group_rewards - group_mean) / group_std).detach()
+        samples["advantages"] = advantages.clone()
 
-        samples["final_advantages"] = advantages
+        samples["final_advantages"] = advantages.clone()
         
 
         total_batch_size, num_timesteps = samples["timesteps"].shape
