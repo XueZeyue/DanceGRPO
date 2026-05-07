@@ -185,7 +185,7 @@ We support the EMA for FLUX with `--ema_decay 0.995` and `--use_ema`. Enabling E
 
 How to debug:
 1. Print the probability ratio, reward, and advantage for each sample; the ratio should be **1.0** before the gradient update, and you can verify the advantage on your own. **Please set the rollout inference batch size and training batch size to 1, otherwise you will not have the ratio 1.0.**
-2. The gradient accumulation should follow the sample dimension, which means, suppose you use 20 steps, the gradient accumulation should be accumulate_samples*20.
+2. The gradient accumulation should follow the sample dimension, which means, suppose you use 20 in num_generations, the gradient accumulation should be accumulate_samples*20.
 3. Based on our experience, the learning rate should be set to between 5e-6 and 2e-5, setting the lr to 1e-6 always leads to training failure in our settings.
 4. Make sure the batchsize is enough; you can follow our setting of flux_8gpus.
 5. More importantly, if you enable cfg, the gradient accumulation should be set to a large number. Based on our experience, we always set it to be num_generations*20, which means you update the gradient only once in each rollout.
