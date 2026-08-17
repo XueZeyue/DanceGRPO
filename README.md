@@ -195,7 +195,7 @@ How to debug:
 1. You can reduce the sampling steps, resolution, or timestep selection ratio.
 2. The Mix ODE-SDE implementation can greatly acclerate the training, such as [MixGRPO](https://arxiv.org/abs/2507.21802).
 
-More improvements on diffusion/flow RL can be found [here](https://github.com/XueZeyue/Awesome-Visual-Generation-Alignment-Survey?tab=readme-ov-file#reinforcement-learning-based-rlhf).
+More improvements on diffusion/flow RL can be found [here](https://github.com/XueZeyue/Awesome-Visual-Generation-Alignment-Survey?tab=readme-ov-file#reinforcement-learning-based-rlhf). For production-scale training with vLLM-Omni rollout and integrated recipes (including DanceGRPO on Wan2.2), see [VeRL-Omni](https://github.com/verl-project/verl-omni) ([docs](https://verl-omni.readthedocs.io/en/latest/index.html)).
 
 
 ## Acknowledgement
